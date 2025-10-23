@@ -103,10 +103,6 @@ static double assignment_step_1d(const double *X, const double *C, int *assign, 
 
 /* update: média dos pontos de cada cluster (1D)
    se cluster vazio, copia X[0] (estratégia naive) */
-#include <omp.h> // Não se esqueça de incluir o cabeçalho do OpenMP no topo do seu arquivo .c
-
-/* update: média dos pontos de cada cluster (1D)
-   se cluster vazio, copia X[0] (estratégia naive) */
 static void update_step_1d(const double *X, double *C, const int *assign, int N, int K){
     double *sum = (double*)calloc((size_t)K, sizeof(double));
     int *cnt = (int*)calloc((size_t)K, sizeof(int));
