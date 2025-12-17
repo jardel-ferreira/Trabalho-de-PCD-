@@ -1,26 +1,53 @@
-Para executar o código, primeiramente é necessário executar o arquivo gerar_dados.c
 
-para editar a o tamanho da base de dados, o número de centróides e outras informações relacionadas aos dados é necessário modificar o código:
+## 🚀 Como Executar o Benchmark do K-Means
 
-    int n_dados = 1000000;      // quantidade de pontos
-    int n_centroides = 18;    // quantidade de centróides
-    double min = 0.0, max = 1000000000;
+Este repositório contém um script de automação em Python que compila, executa e analisa o desempenho de 4 versões diferentes do algoritmo K-Means (de sequencial a otimizado com OpenMP).
 
-em seguida é só executar o scrip run_tests.sh
+### 📋 Pré-requisitos
 
-      chmod +x run_tests.sh
-      ./run_tests.sh
-executando esses comandos no terminal
+Antes de iniciar, certifique-se de ter instalado em sua máquina:
 
-como no arquivo há 3 versões distintas do código, nomeadas de acordo com atributo sequencial {x}: kmeans_1d_naive_x.c
+* **GCC**: Compilador C com suporte a OpenMP.
+* **Python 3.x**: Para rodar o script de automação.
+* **Bibliotecas padrão**: O script utiliza `subprocess`, `os`, `csv` e `time` (já inclusas no Python).
 
-para executar as demais versões, é necessário modificar o trecho abaixo do script:
+### 📂 Estrutura Necessária
 
-    SRC_FILE="kmeans_1d_naive_3.c"
-    EXEC_FILE="kmeans_1d_naive_3"
-    ARGS="dados.csv centroides_iniciais.csv 50 0.000001 assign.csv centroids.csv"
-    THREADS_TO_TEST="2 4 8 16 32"
-no caso é só substituir o 3 por 2 ou apagar o 3 e o _ pra rodar a versão original
+Para que o script funcione corretamente, os seguintes arquivos devem estar na **mesma pasta**:
+
+1. `benchmark_script.py` (o código que você postou)
+2. `gerador_dados.c` (responsável por criar a massa de testes)
+3. `kmeans_1d_naive.c` (v1_seq)
+4. `kmeans_1d_naive_2.c` (v2_assign)
+5. `kmeans_1d_naive_3.c` (v3_critical)
+6. `kmeans_final.c` (v4_opt)
+
+### 🛠️ Execução
+
+1. Abra o terminal na pasta do projeto.
+2. Execute o script principal:
+```bash
+python3 benchmark_script.py
+
+```
 
 
 
+### 📊 O que o script faz?
+
+O script automatiza todo o processo de análise de desempenho:
+
+* **Compilação**: Compila todos os arquivos `.c` usando as flags `-O2` e `-fopenmp`.
+* **Geração de Dados**: Cria arquivos `dados.csv` e `centroides_iniciais.csv` automaticamente para diferentes escalas (de 10^4 a 10^7 pontos).
+* **Execução Multithread**: Testa cada versão com cargas de **1, 2, 4, 8, 16 e 32 threads**.
+* **Validação**: Compara o **SSE** (Sum of Squared Errors) de cada versão paralela com a sequencial para garantir que o resultado está correto.
+* **Métricas**: Calcula automaticamente o **Speedup** e a **Eficiência**.
+
+### 📈 Resultados
+
+Ao final da execução, será gerado um arquivo chamado `resultados_finais.csv`. Este arquivo contém as colunas:
+
+* `N` e `K`: Escala do problema.
+* `Tempo_ms`: Tempo de execução.
+* `Speedup`: Ganho de performance em relação ao sequencial (S = T_{seq} / T_{par}).
+* `Corretude`: Status da validação dos resultados.
