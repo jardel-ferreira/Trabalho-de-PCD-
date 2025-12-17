@@ -20,7 +20,7 @@ SOURCES = {
     "v1_seq": "kmeans_1d_naive.c",
     "v2_assign": "kmeans_1d_naive_2.c",
     "v3_critical": "kmeans_1d_naive_3.c",
-    "v4_opt": "kmeans_opt.c" 
+    "v4_opt": "kmeans_final.c" 
 }
 
 OUTPUT_CSV = "resultados_finais.csv"
